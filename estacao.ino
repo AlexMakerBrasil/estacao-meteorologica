@@ -1,9 +1,3 @@
-/* 
-Estação meteorológica
-Alexandro Costa
-alexiatba@gmail.com
-*/
-
 #include <Wire.h>  
 #include <LiquidCrystal_I2C.h> 
 LiquidCrystal_I2C lcd(0x27, 20, 4); 
@@ -104,21 +98,27 @@ void loop() {
 
 
   // Criando uma página web, no formato HTML para nosso controle
-  cliente.println("HTTP/1.1 200 OK");
-  cliente.println("Content-Type:text/html");
-  cliente.println("");
-  cliente.println("<!DOCTYPE html>");
-  cliente.println("<html>");
-  cliente.println("<head>");
-  cliente.println("<meta charset='UTF-8'>");
-  cliente.println("<title>Estação Meteorológica do IAT</title>");
-  cliente.println("</head>");
-  cliente.println("<body>");
-    
-  cliente.println("<h2>Instituto Anísio Teixeira</h2><h3>Estação Meteorológica</h3>");
-  cliente.println("<div>");
-  cliente.println("<h3>Painel de controle</h3>");
-  cliente.println("<div>");
+cliente.println("HTTP/1.1 200 OK");
+cliente.println("Content-Type:text/html");
+cliente.println("");
+
+cliente.println("<!DOCTYPE html>");
+cliente.println("<html lang=\"pt-br\">");
+cliente.println("<head>");
+cliente.println("  <title>Instituto Anisio Teixeira</title>");
+cliente.println("  <meta charset=\"utf-8\">");
+cliente.println("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+cliente.println("  <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">");
+cliente.println("  <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js\"></script>");
+cliente.println("</head>");
+cliente.println("<body>");
+
+cliente.println("<div class=\"container-fluid p-5 bg-primary text-white text-center\">");
+cliente.println("  <h1>Estação Meteorológica do Instituto Anisio Teixeira</h1>");
+cliente.println("  <p>Educar é crescer. E crescer é viver. Educação é, assim, vida no sentido mais autêntico da palavra.</p>"); 
+cliente.println("   <span>Anísio Teixeira</span> ");
+cliente.println("</div>");
+  
 
   float u = dht.readHumidity();
   float t = dht.readTemperature();
@@ -133,41 +133,74 @@ void loop() {
     Serial.println(t);
   }
 
-  cliente.print("Umidade: ");
-  cliente.println(u);
-  cliente.print("<br><br>");
+ 
+cliente.println("<div class=\"container mt-5\">");
+cliente.println(" <div class=\"row\">");
+    
+cliente.println("    <div class=\"row mb-2\">");
+cliente.println("      <div class=\"col-md-6\">");
+cliente.println("        <div class=\"row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative\">");
+cliente.println("          <div class=\"col p-4 d-flex flex-column position-static\">");
+cliente.println("            <strong class=\"d-inline-block mb-2 text-primary\">Local: Espaço externo Maria Felipa Lab</strong>");
+cliente.println("            <h3 class=\"mb-0\">Estação Meteorológica</h3>");
+cliente.println("            <div class=\"mb-1 text-muted\">Sensor DHT22.</div>");
+cliente.print("TEMPERATURA: ");
+cliente.print(t);
+cliente.println(" ºC");
+cliente.print("UMIDADE: ");
+cliente.println(u);
+cliente.println("%");            
+cliente.println("          </div>");
+cliente.println("          <div class=\"col-auto d-none d-lg-block\">");
+cliente.println("         <svg class=\"bd-placeholder-img\" width=\"200\" height=\"250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Placeholder: Thumbnail\" preserveAspectRatio=\"xMidYMid slice\" focusable=\"false\"><title>Placeholder</title><rect width=\"100%\" height=\"100%\" fill=\"#55595c\"/><text x=\"50%\" y=\"50%\" fill=\"#eceeef\" dy=\".3em\"> </text></svg>");
+cliente.println("          </div>");
+cliente.println("        </div>");
+cliente.println("      </div>");
+      
+cliente.println("      <div class=\"col-md-6\">");
+cliente.println("        <div class=\"row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative\">");
+cliente.println("          <div class=\"col p-4 d-flex flex-column position-static\">");
+cliente.println("            <strong class=\"d-inline-block mb-2 text-primary\">Local: Espaço externo Maria Felipa Lab</strong>");
+cliente.println("            <h3 class=\"mb-0\">Luminosidade e CO2</h3>");
+cliente.println("            <div class=\"mb-1 text-muted\">LDR SENSOR e MQ-7</div>");
+cliente.println("            <p class=\"card-text mb-auto\">LUMINOSIDADE: </p>");
+cliente.println("            <p class=\"card-text mb-auto\">SENSOR DE CO2: </p>");
+            
+cliente.println("          </div>");
+cliente.println("          <div class=\"col-auto d-none d-lg-block\">");
+cliente.println("            <svg class=\"bd-placeholder-img\" width=\"200\" height=\"250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Placeholder: Thumbnail\" preserveAspectRatio=\"xMidYMid slice\" focusable=\"false\"><title>Placeholder</title><rect width=\"100%\" height=\"100%\" fill=\"#55595c\"/><text x=\"50%\" y=\"50%\" fill=\"#eceeef\" dy=\".3em\"> </text></svg>");
+cliente.println("          </div>");
+cliente.println("        </div>");
+cliente.println("      </div>");
+cliente.println("    </div>");
 
-  cliente.print("Temperatura: ");
-  cliente.print(t);
-   cliente.println(" ºC");
-  cliente.print("<br><br>");
-       
-  cliente.println("<a href=\"/LED1=ON\"><button> Ligar </button></a>");
-  cliente.println("<a href=\"/LED1=OFF\"><button> Desligar </button></a><br>");
+
+
+cliente.println("<a href=\"/LED1=ON\"><button> Ligar </button></a>");
+cliente.println("<a href=\"/LED1=OFF\"><button> Desligar </button></a><br>");
   
-  cliente.println("<a href=\"/LED2=ON\"><button> Ligar </button></a>");
-  cliente.println("<a href=\"/LED2=OFF\"><button> Desligar </button></a><br>");
-  
-  cliente.println("<br><br>");
-  cliente.println("<div class=\"painel\">");
-  
-  if(statusA){
-    cliente.println("<p style=\"background-color:green\">LED1 ligado</p>");
-  }else{
-    cliente.println("<p style=\"background-color:red\">LED1 Desligado</p>");
-  }
-  
-  if(statusB){
-    cliente.println("<p style=\"background-color:green\">LED2 ligado</p>");
-  }else{
-    cliente.println("<p style=\"background-color:red\">LED2 Desligado</p>");
-  }
-  
-  cliente.println("</div>");
-  cliente.println("</div>");
-  cliente.println("</div>");
-  
-  cliente.println("</body>");
-  cliente.println("</html>");
+cliente.println("<a href=\"/LED2=ON\"><button> Ligar </button></a>");
+cliente.println("<a href=\"/LED2=OFF\"><button> Desligar </button></a><br>");
+
+
+if(statusA){
+  cliente.println("<p style=\"background-color:green\">LED1 ligado</p>");
+}else{
+  cliente.println("<p style=\"background-color:red\">LED1 Desligado</p>");
+}
+
+if(statusB){
+  cliente.println("<p style=\"background-color:green\">LED2 ligado</p>");
+}else{
+  cliente.println("<p style=\"background-color:red\">LED2 Desligado</p>");
+}
+
+
+cliente.println("  </div>");
+cliente.println("</div>");
+
+cliente.println("</body>");
+cliente.println("</html>");
+
     delay(1); 
 }
